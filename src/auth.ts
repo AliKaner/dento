@@ -61,17 +61,22 @@ const { handlers, auth: internalAuth, signIn, signOut } = NextAuth({
   },
 });
 
-export const auth: typeof internalAuth = (async (...args: any[]) => {
+export const auth: typeof internalAuth = ((...args: any[]) => {
   if (process.env.NEXT_PUBLIC_SKIP_AUTH === "true") {
-    return {
-      user: {
-        id: "mock-id",
-        name: "Mock Admin (SKIP_AUTH)",
-        email: "admin@dentaflow.com",
-        role: "OWNER",
-      },
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    } as any;
+    // If called without arguments (session check in components)
+    if (args.length === 0) {
+      return Promise.resolve({
+        user: {
+          id: "mock-id",
+          name: "Mock Admin (SKIP_AUTH)",
+          email: "admin@dentaflow.com",
+          role: "OWNER",
+        },
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      });
+    }
+    // If called with a callback (middleware/proxy check)
+    return (req: any, ctx: any) => {};
   }
   return (internalAuth as any)(...args);
 }) as any;

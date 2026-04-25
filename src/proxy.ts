@@ -18,8 +18,9 @@ const proxyHandler = auth((req) => {
   }
 });
 
-export const proxy = proxyHandler;
-export default proxyHandler;
+export default function proxy(req: any, ctx: any) {
+  return proxyHandler(req, ctx);
+}
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
