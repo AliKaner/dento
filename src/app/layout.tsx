@@ -5,8 +5,8 @@ import "./globals.css";
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "DentaFlow",
-  description: "Klinik Yönetim Sistemi",
+  title: "Dento AI",
+  description: "Next-Gen Dental Tech",
 };
 
 export default function RootLayout({
@@ -15,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="tr" className={geist.variable}>
-      <body className="bg-[#0d0f18] text-slate-100 antialiased font-[var(--font-geist-sans)]">
+    <html lang="en">
+      <body>
         {children}
       </body>
     </html>
