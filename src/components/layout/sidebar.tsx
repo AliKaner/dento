@@ -47,10 +47,9 @@ const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
         badge: "12",
         badgeColor: "bg-blue-900 text-blue-400",
         subItems: [
-          { label: "Takvim görünümü", href: "/appointments/calendar" },
-          { label: "Online randevu alma", href: "/appointments/online" },
-          { label: "SMS / e-posta hatırlatma", href: "/appointments/reminders" },
-          { label: "Bekleme listesi", href: "/appointments/waitlist" },
+          { label: "Randevu Listesi", href: "/appointments" },
+          { label: "Takvim Görünümü", href: "/appointments/calendar" },
+          { label: "Yeni Randevu", href: "/appointments/new" },
         ],
       },
       {
