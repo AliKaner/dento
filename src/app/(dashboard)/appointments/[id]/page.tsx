@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowLeft, Edit, FileText, Calendar as CalendarIcon, Clock, User, CheckCircle } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import PageHeader from "@/components/shared/PageHeader";
-import { DetailCard } from "@/components/shared/DetailCard";
+import { DetailCard, DetailRow } from "@/components/shared/DetailCard";
 import StatusBadge from "@/components/shared/StatusBadge";
 import AlertBanner from "@/components/shared/AlertBanner";
 

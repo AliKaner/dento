@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FileText, Search, Download, Plus, Filter, MoreHorizontal, CheckCircle2, Clock, XCircle, ChevronDown, Calendar, User } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import DataTable from "@/components/shared/DataTable";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -143,15 +143,16 @@ export default function InvoicesPage() {
           
           <div className="flex items-center gap-3">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className={cn(
+              <DropdownMenuTrigger 
+                className={cn(
+                  buttonVariants({ variant: "outline" }),
                   "glass h-11 rounded-xl px-5 border-white/10 font-bold text-xs uppercase tracking-widest transition-all",
                   statusFilter.length > 0 ? "bg-brand-500/10 text-brand-400 border-brand-500/30" : "text-slate-400 hover:text-white"
-                )}>
-                  <Filter className="w-4 h-4 mr-2" />
-                  Durum: {statusFilter.length === 0 ? "Hepsi" : `${statusFilter.length} Seçili`}
-                  <ChevronDown className="w-3 h-3 ml-2 opacity-50" />
-                </Button>
+                )}
+              >
+                <Filter className="w-4 h-4 mr-2" />
+                Durum: {statusFilter.length === 0 ? "Hepsi" : `${statusFilter.length} Seçili`}
+                <ChevronDown className="w-3 h-3 ml-2 opacity-50" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 bg-[#12141c] border-white/10 text-slate-200 p-2 rounded-2xl shadow-2xl" align="end">
                 <DropdownMenuLabel className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 py-1">Filtrele</DropdownMenuLabel>

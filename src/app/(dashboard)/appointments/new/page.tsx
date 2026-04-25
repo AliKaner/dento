@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -142,17 +142,15 @@ export default function NewAppointmentPage() {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Tarih</Label>
                   <Popover>
-                    <PopoverTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className={cn(
-                          "w-full h-11 justify-start text-left font-normal bg-black/20 border-white/[0.08] hover:bg-black/40 text-white rounded-xl",
-                          !dateValue && "text-slate-500"
-                        )}
-                      >
-                        <CalendarIcon className="mr-3 h-4 w-4 text-slate-400" />
-                        {dateValue ? format(dateValue, "d MMMM yyyy", { locale: tr }) : <span>Tarih seçin</span>}
-                      </Button>
+                    <PopoverTrigger 
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "w-full h-11 justify-start text-left font-normal bg-black/20 border-white/[0.08] hover:bg-black/40 text-white rounded-xl",
+                        !dateValue && "text-slate-500"
+                      )}
+                    >
+                      <CalendarIcon className="mr-3 h-4 w-4 text-slate-400" />
+                      {dateValue ? format(dateValue, "d MMMM yyyy", { locale: tr }) : <span>Tarih seçin</span>}
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-white/10 bg-[#12141c] text-white" align="center">
                       <Calendar

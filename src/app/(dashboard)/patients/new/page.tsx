@@ -10,7 +10,7 @@ import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -24,7 +24,7 @@ const patientSchema = z.object({
   tcNo: z.string().length(11, "TC Kimlik No 11 haneli olmalıdır"),
   phone: z.string().min(10, "Geçerli bir telefon numarası giriniz"),
   email: z.string().email("Geçerli bir e-posta adresi giriniz").optional().or(z.literal("")),
-  birthDate: z.date({ required_error: "Doğum tarihi seçilmelidir" }),
+  birthDate: z.date({ message: "Doğum tarihi seçilmelidir" }),
   gender: z.string().min(1, "Cinsiyet seçilmelidir"),
   address: z.string().optional(),
   bloodType: z.string().optional(),
@@ -139,17 +139,15 @@ export default function NewPatientPage() {
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Doğum Tarihi <span className="text-rose-400">*</span></Label>
                   <Popover>
-                    <PopoverTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className={cn(
-                          "w-full h-11 justify-start text-left font-normal bg-black/20 border-white/[0.08] hover:bg-black/40 text-white rounded-xl",
-                          !birthDate && "text-slate-500"
-                        )}
-                      >
-                        <Calendar className="mr-3 h-4 w-4 text-slate-400" />
-                        {birthDate ? format(birthDate, "d MMMM yyyy", { locale: tr }) : <span>Seçiniz</span>}
-                      </Button>
+                    <PopoverTrigger 
+                      className={cn(
+                        buttonVariants({ variant: "outline" }),
+                        "w-full h-11 justify-start text-left font-normal bg-black/20 border-white/[0.08] hover:bg-black/40 text-white rounded-xl",
+                        !birthDate && "text-slate-500"
+                      )}
+                    >
+                      <Calendar className="mr-3 h-4 w-4 text-slate-400" />
+                      {birthDate ? format(birthDate, "d MMMM yyyy", { locale: tr }) : <span>Seçiniz</span>}
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0 border-white/10 bg-[#12141c] text-white" align="center">
                       <CalendarComp
