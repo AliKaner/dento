@@ -11,287 +11,221 @@ import {
   Package,
   BarChart2,
   Smartphone,
-  Radio,
-  Share2,
   ChevronRight,
-  Zap,
+  LayoutDashboard,
+  Settings,
+  Search,
+  PlusCircle,
+  History,
+  FileText,
+  Wallet,
+  PieChart,
+  Warehouse,
+  AlertCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SubItem {
   label: string;
   href: string;
+  icon?: React.ElementType;
 }
 
 interface NavItem {
-  key: string;
   label: string;
   icon: React.ElementType;
-  iconColor: string;
-  iconStroke: string;
+  href?: string;
   badge?: string;
-  badgeColor?: string;
-  subItems: SubItem[];
+  subItems?: SubItem[];
 }
 
-const NAV_SECTIONS: { label: string; items: NavItem[] }[] = [
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
+const NAVIGATION: NavSection[] = [
   {
-    label: "Ana Menü",
+    title: "Genel",
     items: [
-      {
-        key: "randevu",
-        label: "Randevu Yönetimi",
+      { label: "Dashboard", href: "/", icon: LayoutDashboard },
+      { 
+        label: "Randevular", 
         icon: Calendar,
-        iconColor: "bg-blue-900/60",
-        iconStroke: "text-blue-400",
         badge: "12",
-        badgeColor: "bg-blue-900 text-blue-400",
         subItems: [
-          { label: "Randevu Listesi", href: "/appointments" },
-          { label: "Takvim Görünümü", href: "/appointments/calendar" },
-          { label: "Yeni Randevu", href: "/appointments/new" },
-        ],
-      },
-      {
-        key: "hasta",
-        label: "Hasta Yönetimi",
-        icon: Users,
-        iconColor: "bg-violet-900/60",
-        iconStroke: "text-violet-400",
-        subItems: [
-          { label: "Hasta kartı ve geçmiş", href: "/patients" },
-          { label: "Röntgen ve belgeler", href: "/patients/documents" },
-          { label: "Anamnez formu", href: "/patients/anamnesis" },
-          { label: "İlaç alerjileri", href: "/patients/allergies" },
-          { label: "Sigorta bilgileri", href: "/patients/insurance" },
-        ],
-      },
-      {
-        key: "muayene",
-        label: "Klinik Muayene",
-        icon: ClipboardCheck,
-        iconColor: "bg-orange-900/50",
-        iconStroke: "text-orange-400",
-        subItems: [
-          { label: "Diş şeması (odontogram)", href: "/exam/odontogram" },
-          { label: "Tedavi planı", href: "/exam/treatment-plan" },
-          { label: "Klinik notlar", href: "/exam/notes" },
-          { label: "Reçete yazma", href: "/exam/prescription" },
-          { label: "Fotoğraf ekleme", href: "/exam/photos" },
-        ],
-      },
-      {
-        key: "finans",
-        label: "Finans ve Fatura",
-        icon: DollarSign,
-        iconColor: "bg-amber-900/50",
-        iconStroke: "text-amber-400",
-        badge: "3",
-        badgeColor: "bg-amber-900 text-amber-400",
-        subItems: [
-          { label: "Fatura oluşturma", href: "/finance/invoices" },
-          { label: "Ödeme takibi", href: "/finance/payments" },
-          { label: "Taksit planı", href: "/finance/installments" },
-          { label: "Gelir / gider raporu", href: "/finance/reports" },
-        ],
-      },
-      {
-        key: "stok",
-        label: "Stok ve Malzeme",
-        icon: Package,
-        iconColor: "bg-emerald-900/50",
-        iconStroke: "text-emerald-400",
-        badge: "!",
-        badgeColor: "bg-red-900 text-red-400",
-        subItems: [
-          { label: "Sarf malzeme takibi", href: "/inventory" },
-          { label: "Kritik stok uyarısı", href: "/inventory/alerts" },
-          { label: "Tedarikçi yönetimi", href: "/inventory/suppliers" },
-          { label: "Sterilizasyon takibi", href: "/inventory/sterilization" },
-        ],
+          { label: "Randevu Listesi", href: "/appointments", icon: FileText },
+          { label: "Takvim Görünümü", href: "/appointments/calendar", icon: Calendar },
+          { label: "Yeni Randevu", href: "/appointments/new", icon: PlusCircle },
+        ]
       },
     ],
   },
   {
-    label: "Destek Katmanı",
+    title: "Yönetim",
     items: [
-      {
-        key: "raporlar",
-        label: "Raporlar ve Analitik",
+      { 
+        label: "Hastalar", 
+        icon: Users,
+        subItems: [
+          { label: "Hasta Listesi", href: "/patients", icon: Users },
+          { label: "Yeni Hasta", href: "/patients/new", icon: PlusCircle },
+          { label: "Hasta Geçmişi", href: "/patients/history", icon: History },
+        ]
+      },
+      { 
+        label: "Finans", 
+        icon: DollarSign,
+        subItems: [
+          { label: "Gelir / Gider", href: "/finance", icon: Wallet },
+          { label: "Faturalar", href: "/finance/invoices", icon: FileText },
+          { label: "Ödemeler", href: "/finance/payments", icon: DollarSign },
+        ]
+      },
+      { 
+        label: "Stok", 
+        icon: Package,
+        badge: "!",
+        subItems: [
+          { label: "Malzeme Listesi", href: "/inventory", icon: Warehouse },
+          { label: "Kritik Stok", href: "/inventory/alerts", icon: AlertCircle },
+          { label: "Tedarikçiler", href: "/inventory/suppliers", icon: Users },
+        ]
+      },
+    ],
+  },
+  {
+    title: "Analiz",
+    items: [
+      { 
+        label: "Raporlar", 
         icon: BarChart2,
-        iconColor: "bg-sky-900/50",
-        iconStroke: "text-sky-400",
         subItems: [
-          { label: "Doluluk oranı", href: "/reports/occupancy" },
-          { label: "Hekim performansı", href: "/reports/performance" },
-          { label: "Hasta sadakat analizi", href: "/reports/retention" },
-          { label: "Aylık gelir özeti", href: "/reports/revenue" },
-        ],
+          { label: "Genel Raporlar", href: "/reports", icon: PieChart },
+          { label: "Hekim Performansı", href: "/reports/doctors", icon: Users },
+          { label: "Finansal Analiz", href: "/reports/finance", icon: BarChart2 },
+        ]
       },
-      {
-        key: "hasta-app",
-        label: "Hasta Uygulaması",
-        icon: Smartphone,
-        iconColor: "bg-pink-900/50",
-        iconStroke: "text-pink-400",
-        subItems: [
-          { label: "Randevu alma / iptal", href: "/patient-app/appointments" },
-          { label: "Tedavi geçmişi", href: "/patient-app/history" },
-          { label: "Online ödeme", href: "/patient-app/payment" },
-        ],
-      },
-      {
-        key: "klinik",
-        label: "Klinik Yönetim",
-        icon: Radio,
-        iconColor: "bg-slate-700/50",
-        iconStroke: "text-slate-400",
-        subItems: [
-          { label: "Personel ve roller", href: "/clinic/staff" },
-          { label: "Vardiya ve çalışma saati", href: "/clinic/shifts" },
-          { label: "KVKK ve log", href: "/clinic/compliance" },
-        ],
-      },
-      {
-        key: "entegrasyon",
-        label: "Entegrasyonlar",
-        icon: Share2,
-        iconColor: "bg-red-900/50",
-        iconStroke: "text-red-400",
-        subItems: [
-          { label: "E-fatura (GİB)", href: "/integrations/einvoice" },
-          { label: "WhatsApp / SMS API", href: "/integrations/messaging" },
-          { label: "Ödeme altyapısı", href: "/integrations/payment" },
-        ],
-      },
+      { label: "Hasta Uygulaması", href: "/patient-app", icon: Smartphone },
     ],
   },
 ];
 
-function getOpenKeyFromPath(pathname: string): string {
-  for (const section of NAV_SECTIONS) {
-    for (const item of section.items) {
-      if (
-        item.subItems.some(
-          (sub) =>
-            pathname === sub.href || pathname.startsWith(sub.href + "/")
-        )
-      ) {
-        return item.key;
-      }
-    }
-  }
-  return "";
-}
-
-export default function DentalSidebar() {
+export default function Sidebar() {
   const pathname = usePathname();
-  const [openKey, setOpenKey] = useState(() => getOpenKeyFromPath(pathname));
+  const [openItems, setOpenItems] = useState<string[]>([]);
 
   useEffect(() => {
-    const key = getOpenKeyFromPath(pathname);
-    if (key) setOpenKey(key);
+    // Auto-open parent item if a sub-item is active
+    NAVIGATION.forEach(section => {
+      section.items.forEach(item => {
+        if (item.subItems?.some(sub => pathname?.startsWith(sub.href))) {
+          setOpenItems(prev => prev.includes(item.label) ? prev : [...prev, item.label]);
+        }
+      });
+    });
   }, [pathname]);
 
-  const toggle = (key: string) =>
-    setOpenKey((prev) => (prev === key ? "" : key));
+  const toggleItem = (label: string) => {
+    setOpenItems(prev => 
+      prev.includes(label) ? prev.filter(i => i !== label) : [...prev, label]
+    );
+  };
 
   return (
-    <aside className="flex h-screen w-[260px] flex-col bg-[#13151f] border-r border-white/[0.06] px-2.5 py-4 shrink-0">
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-2 pb-4 mb-1 border-b border-white/[0.05]">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 shrink-0">
-          <Zap className="h-4 w-4 text-white" strokeWidth={2.5} />
+    <aside className="w-64 h-screen flex flex-col bg-surface-app border-r border-white/[0.05] relative z-20 transition-all duration-300">
+      <div className="p-6 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
+          <span className="text-white font-bold text-xl">D</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-[14px] font-semibold text-slate-100 tracking-tight leading-none">
-            DentaFlow
-          </span>
-          <span className="text-[11px] text-slate-500 mt-0.5">Klinik Yönetimi</span>
+          <span className="text-white font-bold tracking-tight text-lg leading-none">DentaFlow</span>
+          <span className="text-brand-400/60 text-[10px] font-medium tracking-widest uppercase mt-1">Premium Clinic</span>
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col gap-0.5 py-2 scrollbar-none">
-        {NAV_SECTIONS.map((section) => (
-          <div key={section.label}>
-            <p className="px-3 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-600">
-              {section.label}
-            </p>
+      <div className="px-4 mb-4">
+        <div className="relative group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-brand-400 transition-colors" />
+          <input 
+            type="text" 
+            placeholder="Hızlı ara..." 
+            className="w-full bg-white/[0.03] border border-white/[0.05] rounded-xl py-2 pl-9 pr-4 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500/50 transition-all"
+          />
+        </div>
+      </div>
+
+      <nav className="flex-1 overflow-y-auto px-3 space-y-6 custom-scrollbar pb-6">
+        {NAVIGATION.map((section) => (
+          <div key={section.title} className="space-y-1">
+            <h3 className="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-2">
+              {section.title}
+            </h3>
             {section.items.map((item) => {
-              const isOpen = openKey === item.key;
+              const isOpen = openItems.includes(item.label);
+              const isActive = item.href ? (pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))) : item.subItems?.some(sub => pathname?.startsWith(sub.href));
               const Icon = item.icon;
 
               return (
-                <div key={item.key}>
-                  <button
-                    onClick={() => toggle(item.key)}
-                    className={cn(
-                      "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 transition-colors duration-150 text-left",
-                      isOpen ? "bg-white/[0.05]" : "hover:bg-white/[0.04]"
-                    )}
-                  >
-                    <div
+                <div key={item.label} className="space-y-1">
+                  {item.subItems ? (
+                    <button
+                      onClick={() => toggleItem(item.label)}
                       className={cn(
-                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
-                        item.iconColor
+                        "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
+                        isActive && !isOpen ? "bg-brand-500/10 text-brand-400" : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.03]"
                       )}
                     >
-                      <Icon
-                        className={cn("h-[15px] w-[15px]", item.iconStroke)}
-                        strokeWidth={1.8}
-                      />
-                    </div>
-                    <span
-                      className={cn(
-                        "flex-1 text-[13.5px] font-medium tracking-tight transition-colors",
-                        isOpen ? "text-slate-200" : "text-slate-400"
-                      )}
-                    >
-                      {item.label}
-                    </span>
-                    {item.badge && (
-                      <span
-                        className={cn(
-                          "rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
-                          item.badgeColor
-                        )}
-                      >
-                        {item.badge}
+                      <Icon className={cn("w-5 h-5", isActive ? "text-brand-400" : "text-slate-500 group-hover:text-slate-300")} />
+                      <span className="text-[13.5px] font-medium tracking-tight flex-1 text-left">
+                        {item.label}
                       </span>
-                    )}
-                    <ChevronRight
+                      <ChevronRight className={cn("w-3.5 h-3.5 transition-transform duration-200", isOpen && "rotate-90")} />
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href || "#"}
                       className={cn(
-                        "h-3.5 w-3.5 shrink-0 text-slate-600 transition-transform duration-200",
-                        isOpen && "rotate-90 text-slate-400"
+                        "flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group relative",
+                        isActive ? "bg-brand-500/10 text-brand-400 shadow-[inset_0_0_20px_rgba(59,130,246,0.05)]" : "text-slate-400 hover:text-slate-100 hover:bg-white/[0.03]"
                       )}
-                    />
-                  </button>
+                    >
+                      {isActive && (
+                        <div className="absolute left-0 w-1 h-6 bg-brand-500 rounded-r-full shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+                      )}
+                      <Icon className={cn("w-5 h-5", isActive ? "text-brand-400" : "text-slate-500 group-hover:text-slate-300")} />
+                      <span className="text-[13.5px] font-medium tracking-tight flex-1">
+                        {item.label}
+                      </span>
+                      {item.badge && (
+                        <span className={cn(
+                          "text-[10px] px-1.5 py-0.5 rounded-full font-bold",
+                          item.badge === "!" ? "bg-red-500/20 text-red-400" : "bg-brand-500/20 text-brand-400"
+                        )}>
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  )}
 
-                  {isOpen && (
-                    <div className="flex flex-col gap-px pb-1 pl-[42px] pr-1">
+                  {item.subItems && isOpen && (
+                    <div className="ml-4 pl-4 border-l border-white/5 space-y-1 py-1">
                       {item.subItems.map((sub) => {
-                        const isActive =
-                          pathname === sub.href ||
-                          pathname.startsWith(sub.href + "/");
+                        const isSubActive = pathname === sub.href;
+                        const SubIcon = sub.icon || Icon;
                         return (
                           <Link
                             key={sub.href}
                             href={sub.href}
                             className={cn(
-                              "flex items-center gap-2 rounded-lg px-2.5 py-[7px] text-[13px] font-normal tracking-tight transition-colors duration-100",
-                              isActive
-                                ? "bg-blue-900/20 text-blue-300"
-                                : "text-slate-500 hover:bg-white/[0.04] hover:text-slate-300"
+                              "flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 group",
+                              isSubActive ? "text-brand-400 bg-brand-500/5" : "text-slate-500 hover:text-slate-300 hover:bg-white/[0.02]"
                             )}
                           >
-                            <span
-                              className={cn(
-                                "h-1.5 w-1.5 shrink-0 rounded-full",
-                                isActive ? "bg-blue-400" : "bg-slate-700"
-                              )}
-                            />
-                            {sub.label}
+                            <SubIcon className={cn("w-4 h-4", isSubActive ? "text-brand-400" : "text-slate-600 group-hover:text-slate-400")} />
+                            <span className="text-[12.5px] font-medium tracking-tight">
+                              {sub.label}
+                            </span>
                           </Link>
                         );
                       })}
@@ -304,23 +238,19 @@ export default function DentalSidebar() {
         ))}
       </nav>
 
-      {/* User Footer */}
-      <div className="border-t border-white/[0.05] pt-2">
-        <button className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 hover:bg-white/[0.04] transition-colors">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-600 text-[13px] font-semibold text-white">
-            DT
+      <div className="p-4 mt-auto">
+        <div className="glass rounded-2xl p-3 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-slate-700 to-slate-900 border border-white/10 flex items-center justify-center shadow-inner">
+            <span className="text-white text-xs font-bold">DT</span>
           </div>
-          <div className="flex-1 overflow-hidden text-left">
-            <p className="text-[13px] font-medium text-slate-200 truncate">
-              Dr. Tansu Kaya
-            </p>
-            <p className="text-[11px] text-slate-500">Klinik Sahibi</p>
+          <div className="flex-1 min-w-0 text-left">
+            <p className="text-sm font-semibold text-white truncate leading-none">Dr. Tansu Kaya</p>
+            <p className="text-[10px] text-brand-400/70 font-medium mt-1 uppercase tracking-wider">Klinik Sahibi</p>
           </div>
-          <Radio
-            className="h-3.5 w-3.5 shrink-0 text-slate-600"
-            strokeWidth={1.8}
-          />
-        </button>
+          <button className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-200 transition-colors">
+            <Settings className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </aside>
   );

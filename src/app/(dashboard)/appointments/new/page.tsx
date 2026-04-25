@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Clock, User, Clipboard, Info, Check } from "lucide-react";
 import { format } from "date-fns";
 import { tr } from "date-fns/locale";
 
@@ -18,7 +18,6 @@ import { Calendar } from "@/components/ui/calendar";
 
 import PageHeader from "@/components/shared/PageHeader";
 import PatientCombobox from "@/components/shared/PatientCombobox";
-import FormSection from "@/components/shared/FormSection";
 
 const formSchema = z.object({
   patientId: z.string().min(1, "Lütfen bir hasta seçin"),
@@ -47,16 +46,15 @@ export default function NewAppointmentPage() {
   } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      durationMin: 30,
+      durationMin: "30",
       type: "CHECKUP",
     },
   });
 
   const dateValue = watch("date");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    // Mock save
     setTimeout(() => {
       setIsSubmitting(false);
       router.push("/appointments");
@@ -64,126 +62,187 @@ export default function NewAppointmentPage() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#13151f] rounded-xl border border-white/5 overflow-hidden">
+    <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <PageHeader
         title="Yeni Randevu"
-        description="Hasta için yeni bir randevu oluşturun."
-        breadcrumb={[
-          { label: "Randevular", href: "/appointments" },
-          { label: "Yeni" }
-        ]}
+        description="Hasta için yeni bir randevu kaydı oluşturun."
+        className="px-0 pt-0"
       />
 
-      <div className="flex-1 overflow-y-auto p-6 pt-0">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-3xl">
-          <FormSection title="Randevu Bilgileri" description="Hasta, doktor ve zaman seçimi">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-slate-300">Hasta <span className="text-red-400">*</span></Label>
-                <PatientCombobox 
-                  onChange={(id) => setValue("patientId", id)} 
-                />
-                {errors.patientId && <p className="text-[13px] text-red-400">{errors.patientId.message}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-slate-300">Doktor <span className="text-red-400">*</span></Label>
-                <select
-                  {...register("doctorId")}
-                  className="w-full rounded-lg border border-white/[0.08] bg-[#1a1d2a] px-3 py-2 text-[13px] text-slate-200 focus:border-brand-500 focus:outline-none"
-                >
-                  <option value="">Seçiniz</option>
-                  <option value="dr-ali">Dr. Ali Yılmaz</option>
-                  <option value="dr-ayse">Dr. Ayşe Demir</option>
-                </select>
-                {errors.doctorId && <p className="text-[13px] text-red-400">{errors.doctorId.message}</p>}
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-slate-300">Tarih <span className="text-red-400">*</span></Label>
-                <Popover>
-                  <PopoverTrigger className={cn("w-full justify-start text-left font-normal bg-[#1a1d2a] border-white/[0.08] hover:bg-[#1a1d2a]/80 text-slate-200 inline-flex items-center rounded-lg border px-3 py-2 text-sm", !dateValue && "text-slate-500")}>
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateValue ? format(dateValue, "d MMMM yyyy", { locale: tr }) : <span>Tarih seçin</span>}
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 border-white/10 bg-[#13151f] text-slate-200" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateValue}
-                      onSelect={(date) => date && setValue("date", date)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                {errors.date && <p className="text-[13px] text-red-400">{errors.date.message}</p>}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Saat <span className="text-red-400">*</span></Label>
-                  <Input 
-                    type="time" 
-                    className="bg-[#1a1d2a] border-white/[0.08] text-slate-200" 
-                    {...register("time")} 
-                  />
-                  {errors.time && <p className="text-[13px] text-red-400">{errors.time.message}</p>}
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6 pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Info Column */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="glass rounded-3xl p-8 space-y-8">
+              <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+                <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
+                  <Clipboard className="w-5 h-5 text-brand-400" />
                 </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Genel Bilgiler</h3>
+                  <p className="text-xs text-slate-500">Hasta ve doktor seçimi</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <Label className="text-slate-300">Süre (dk) <span className="text-red-400">*</span></Label>
+                  <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Hasta Seçimi</Label>
+                  <PatientCombobox 
+                    onChange={(id) => setValue("patientId", id)} 
+                  />
+                  {errors.patientId && <p className="text-[11px] font-medium text-rose-400 px-1">{errors.patientId.message}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Görevli Doktor</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                    <select
+                      {...register("doctorId")}
+                      className="w-full h-11 rounded-xl border border-white/[0.08] bg-black/20 pl-10 pr-4 text-[13px] text-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all appearance-none"
+                    >
+                      <option value="" className="bg-[#12141c]">Doktor Seçiniz</option>
+                      <option value="dr-ali" className="bg-[#12141c]">Dr. Ali Yılmaz</option>
+                      <option value="dr-ayse" className="bg-[#12141c]">Dr. Ayşe Demir</option>
+                    </select>
+                  </div>
+                  {errors.doctorId && <p className="text-[11px] font-medium text-rose-400 px-1">{errors.doctorId.message}</p>}
+                </div>
+              </div>
+
+              <div className="space-y-2 pt-2">
+                <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Randevu Notları</Label>
+                <div className="relative">
+                  <Info className="absolute left-3 top-3 w-4 h-4 text-slate-500" />
+                  <textarea
+                    {...register("notes")}
+                    rows={5}
+                    className="w-full rounded-2xl border border-white/[0.08] bg-black/20 pl-10 pr-4 py-3 text-[13px] text-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 transition-all resize-none"
+                    placeholder="Randevu ile ilgili özel notlar veya hatırlatmalar..."
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Time and Type Column */}
+          <div className="space-y-6">
+            <div className="glass rounded-3xl p-8 space-y-6">
+              <div className="flex items-center gap-3 pb-4 border-b border-white/5">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/10 flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-violet-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Zamanlama</h3>
+                  <p className="text-xs text-slate-500">Tarih, saat ve tür</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Tarih</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        className={cn(
+                          "w-full h-11 justify-start text-left font-normal bg-black/20 border-white/[0.08] hover:bg-black/40 text-white rounded-xl",
+                          !dateValue && "text-slate-500"
+                        )}
+                      >
+                        <CalendarIcon className="mr-3 h-4 w-4 text-slate-400" />
+                        {dateValue ? format(dateValue, "d MMMM yyyy", { locale: tr }) : <span>Tarih seçin</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 border-white/10 bg-[#12141c] text-white" align="center">
+                      <Calendar
+                        mode="single"
+                        selected={dateValue}
+                        onSelect={(date) => date && setValue("date", date)}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  {errors.date && <p className="text-[11px] font-medium text-rose-400 px-1">{errors.date.message}</p>}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Saat</Label>
+                    <Input 
+                      type="time" 
+                      className="h-11 bg-black/20 border-white/[0.08] text-white rounded-xl focus:ring-2 focus:ring-brand-500/20" 
+                      {...register("time")} 
+                    />
+                    {errors.time && <p className="text-[11px] font-medium text-rose-400 px-1">{errors.time.message}</p>}
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Süre</Label>
+                    <select
+                      {...register("durationMin")}
+                      className="w-full h-11 rounded-xl border border-white/[0.08] bg-black/20 px-4 text-[13px] text-white focus:border-brand-500 focus:outline-none appearance-none"
+                    >
+                      <option value="15" className="bg-[#12141c]">15 dk</option>
+                      <option value="30" className="bg-[#12141c]">30 dk</option>
+                      <option value="45" className="bg-[#12141c]">45 dk</option>
+                      <option value="60" className="bg-[#12141c]">60 dk</option>
+                      <option value="90" className="bg-[#12141c]">90 dk</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">İşlem Türü</Label>
                   <select
-                    {...register("durationMin")}
-                    className="w-full rounded-lg border border-white/[0.08] bg-[#1a1d2a] px-3 py-2 text-[13px] text-slate-200 focus:border-brand-500 focus:outline-none"
+                    {...register("type")}
+                    className="w-full h-11 rounded-xl border border-white/[0.08] bg-black/20 px-4 text-[13px] text-white focus:border-brand-500 focus:outline-none appearance-none"
                   >
-                    <option value="15">15 dk</option>
-                    <option value="30">30 dk</option>
-                    <option value="45">45 dk</option>
-                    <option value="60">60 dk</option>
-                    <option value="90">90 dk</option>
+                    <option value="CHECKUP" className="bg-[#12141c]">🦷 Kontrol</option>
+                    <option value="TREATMENT" className="bg-[#12141c]">💉 Tedavi</option>
+                    <option value="XRAY" className="bg-[#12141c]">📸 Röntgen</option>
+                    <option value="CLEANING" className="bg-[#12141c]">✨ Temizleme</option>
+                    <option value="SURGERY" className="bg-[#12141c]">🔪 Cerrahi</option>
+                    <option value="OTHER" className="bg-[#12141c]">📝 Diğer</option>
                   </select>
                 </div>
               </div>
-            </div>
-          </FormSection>
 
-          <FormSection title="Muayene Detayı" description="Randevu türü ve notlar">
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label className="text-slate-300">Randevu Türü <span className="text-red-400">*</span></Label>
-                <select
-                  {...register("type")}
-                  className="w-full rounded-lg border border-white/[0.08] bg-[#1a1d2a] px-3 py-2 text-[13px] text-slate-200 focus:border-brand-500 focus:outline-none"
+              <div className="pt-4 space-y-3">
+                <Button 
+                  type="submit" 
+                  disabled={isSubmitting} 
+                  className="w-full h-12 bg-brand-500 hover:bg-brand-600 text-white rounded-2xl font-bold shadow-lg shadow-brand-500/20 transition-all border-0"
                 >
-                  <option value="CHECKUP">Kontrol</option>
-                  <option value="TREATMENT">Tedavi</option>
-                  <option value="XRAY">Röntgen</option>
-                  <option value="CLEANING">Temizleme</option>
-                  <option value="SURGERY">Cerrahi</option>
-                  <option value="OTHER">Diğer</option>
-                </select>
-              </div>
-
-              <div className="space-y-2 md:col-span-2">
-                <Label className="text-slate-300">Notlar</Label>
-                <textarea
-                  {...register("notes")}
-                  rows={4}
-                  className="w-full rounded-lg border border-white/[0.08] bg-[#1a1d2a] px-3 py-2 text-[13px] text-slate-200 focus:border-brand-500 focus:outline-none resize-none"
-                  placeholder="Randevu ile ilgili notlar..."
-                />
+                  {isSubmitting ? "Kaydediliyor..." : (
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4" />
+                      Randevu Oluştur
+                    </div>
+                  )}
+                </Button>
+                <Button 
+                  type="button" 
+                  variant="ghost" 
+                  onClick={() => router.back()} 
+                  className="w-full h-12 text-slate-500 hover:text-white hover:bg-white/5 rounded-2xl font-bold transition-all"
+                >
+                  Vazgeç
+                </Button>
               </div>
             </div>
-          </FormSection>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
-            <Button type="button" variant="ghost" onClick={() => router.back()} className="text-slate-300 hover:text-white hover:bg-white/5">
-              İptal
-            </Button>
-            <Button type="submit" disabled={isSubmitting} className="bg-brand-500 hover:bg-brand-600 text-white border-0">
-              {isSubmitting ? "Kaydediliyor..." : "Randevu Oluştur"}
-            </Button>
+            <div className="glass rounded-3xl p-6 bg-gradient-to-br from-brand-600/10 to-transparent">
+              <h4 className="text-sm font-bold text-white mb-2 flex items-center gap-2">
+                <div className="w-1 h-3 bg-brand-500 rounded-full" />
+                Yardımcı Not
+              </h4>
+              <p className="text-[11px] text-slate-500 leading-relaxed">
+                Randevu oluştururken hastanın son muayene tarihlerini kontrol etmeyi unutmayın. Acil durumlar için süre alanını 15dk olarak güncelleyebilirsiniz.
+              </p>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 }

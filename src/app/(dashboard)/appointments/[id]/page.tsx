@@ -61,25 +61,22 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
 
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
-            <DetailCard
-              title="Randevu Bilgileri"
-              sections={[
-                { label: "Tarih", value: <div className="flex items-center gap-2"><CalendarIcon className="h-4 w-4 text-slate-400"/> {appointment.date}</div> },
-                { label: "Saat", value: <div className="flex items-center gap-2"><Clock className="h-4 w-4 text-slate-400"/> {appointment.time}</div> },
-                { label: "Süre", value: appointment.duration },
-                { label: "Doktor", value: <div className="flex items-center gap-2"><User className="h-4 w-4 text-slate-400"/> {appointment.doctorName}</div> },
-                { label: "Durum", value: <StatusBadge status={appointment.status} /> },
-                { label: "Tür", value: <span className="text-slate-300">{appointment.type}</span> },
-                { label: "Notlar", value: appointment.notes, colSpan: 2 },
-              ]}
-            />
+            <DetailCard title="Randevu Bilgileri">
+              <DetailRow label="Tarih" value={<div className="flex items-center gap-2 font-medium text-white"><CalendarIcon className="h-4 w-4 text-brand-400"/> {appointment.date}</div>} />
+              <DetailRow label="Saat" value={<div className="flex items-center gap-2 font-medium text-white"><Clock className="h-4 w-4 text-brand-400"/> {appointment.time}</div>} />
+              <DetailRow label="Süre" value={appointment.duration} />
+              <DetailRow label="Doktor" value={<div className="flex items-center gap-2 font-medium text-white"><User className="h-4 w-4 text-brand-400"/> {appointment.doctorName}</div>} />
+              <DetailRow label="Durum" value={<StatusBadge status={appointment.status} />} />
+              <DetailRow label="Tür" value={<span className="text-slate-300">{appointment.type}</span>} />
+              <DetailRow label="Notlar" value={appointment.notes} fullWidth />
+            </DetailCard>
 
-            <div className="rounded-xl border border-white/5 bg-[#1a1d2a] p-5 flex items-center justify-between">
+            <div className="glass rounded-3xl p-6 flex items-center justify-between border-white/[0.05]">
               <div>
-                <h3 className="font-medium text-slate-200">Muayene Kaydı</h3>
-                <p className="text-sm text-slate-500 mt-1">Bu randevu için muayene kaydı oluşturun veya görüntüleyin.</p>
+                <h3 className="font-bold text-white">Muayene Kaydı</h3>
+                <p className="text-xs text-slate-500 mt-1">Bu randevu için muayene kaydı oluşturun veya görüntüleyin.</p>
               </div>
-              <Link href={`/exam/new?appointmentId=${appointment.id}`} className={buttonVariants({ variant: "default", className: "bg-[#1e3a5f] hover:bg-[#254673] text-brand-300" })}>
+              <Link href={`/exam/new?appointmentId=${appointment.id}`} className={buttonVariants({ variant: "default", className: "bg-brand-500/10 hover:bg-brand-500/20 text-brand-400 border-0" })}>
                 <FileText className="mr-2 h-4 w-4" />
                 Kayıt Oluştur
               </Link>
@@ -89,25 +86,21 @@ export default function AppointmentDetailPage({ params }: { params: { id: string
           <div className="space-y-6">
             <DetailCard
               title="Hasta Özeti"
-              sections={[
-                { label: "Ad Soyad", value: <Link href={`/patients/${appointment.patientId}`} className="text-brand-400 hover:underline">{appointment.patientName}</Link>, colSpan: 2 },
-                { label: "Telefon", value: appointment.patientPhone, colSpan: 2 },
-                { label: "Yaş", value: appointment.patientAge.toString(), colSpan: 2 },
-              ]}
               action={
-                <Link href={`/patients/${appointment.patientId}`} className={buttonVariants({ variant: "ghost", size: "sm", className: "h-8 text-brand-400 hover:text-brand-300 hover:bg-brand-400/10" })}>
+                <Link href={`/patients/${appointment.patientId}`} className="text-xs text-brand-400 hover:text-brand-300 font-bold">
                   Profili Gör
                 </Link>
               }
-            />
+            >
+              <DetailRow label="Ad Soyad" value={<Link href={`/patients/${appointment.patientId}`} className="text-brand-400 hover:underline font-bold">{appointment.patientName}</Link>} />
+              <DetailRow label="Telefon" value={appointment.patientPhone} />
+              <DetailRow label="Yaş" value={appointment.patientAge.toString()} />
+            </DetailCard>
 
-            <DetailCard
-              title="Sistem Bilgileri"
-              sections={[
-                { label: "Randevu ID", value: <span className="font-mono text-xs">{appointment.id}</span>, colSpan: 2 },
-                { label: "Oluşturulma", value: appointment.createdAt, colSpan: 2 },
-              ]}
-            />
+            <DetailCard title="Sistem Bilgileri">
+              <DetailRow label="Randevu ID" value={<span className="font-mono text-xs">{appointment.id}</span>} />
+              <DetailRow label="Oluşturulma" value={appointment.createdAt} />
+            </DetailCard>
           </div>
         </div>
       </div>
