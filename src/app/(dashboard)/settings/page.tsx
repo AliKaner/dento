@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Settings, User, Shield, Bell, Database, Globe, Moon, Save } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,14 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export default function SettingsPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <div className="flex flex-col gap-8 animate-in fade-in duration-700">
       <PageHeader
@@ -25,18 +34,21 @@ export default function SettingsPage() {
             { label: "Bildirimler", icon: Bell },
             { label: "Veri Yönetimi", icon: Database },
             { label: "Bölgesel Ayarlar", icon: Globe },
-          ].map((item) => (
-            <button
-              key={item.label}
-              className={cn(
-                "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all",
-                item.active ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20" : "text-slate-400 hover:text-white hover:bg-white/5"
-              )}
-            >
-              <item.icon className="w-4 h-4" />
-              <span className="text-sm font-bold">{item.label}</span>
-            </button>
-          ))}
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <button
+                  key={item.label}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all",
+                    item.active ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20" : "text-slate-400 hover:text-white hover:bg-white/5"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-sm font-bold">{item.label}</span>
+                </button>
+              );
+            })}
         </div>
 
         {/* Content */}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Smartphone, QrCode, Download, Share2, CheckCircle2, ShieldCheck, Zap, Calendar, Heart, MessageSquare } from "lucide-react";
+import { Smartphone, QrCode, Download, Share2, CheckCircle2, ShieldCheck, Zap, Calendar, Heart, MessageSquare, User } from "lucide-react";
 import PageHeader from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

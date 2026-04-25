@@ -106,6 +106,11 @@ const NAVIGATION: NavSection[] = [
           { label: "Finansal Analiz", href: "/reports/finance", icon: BarChart2 },
         ]
       },
+    ],
+  },
+  {
+    title: "Diğer",
+    items: [
       { label: "Hasta Uygulaması", href: "/patient-app", icon: Smartphone },
     ],
   },
