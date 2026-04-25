@@ -59,12 +59,6 @@ export default function KpiCard({
           {subtitle && (
             <p className="mt-1.5 text-[11px] text-slate-500 font-medium truncate">{subtitle}</p>
           )}
-          {delta && !loading && (
-            <div className={cn("mt-3 flex items-center gap-1 w-fit px-2 py-0.5 rounded-full bg-white/[0.03] border border-white/[0.05]", deltaColor)}>
-              <DeltaIcon className="h-3 w-3" />
-              <span className="text-[10px] font-bold">{delta.value}</span>
-            </div>
-          )}
         </div>
         {icon && (
           <div
@@ -77,6 +71,16 @@ export default function KpiCard({
           </div>
         )}
       </div>
+
+      {delta && !loading && (
+        <div className={cn(
+          "absolute bottom-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/[0.05] border border-white/[0.1] shadow-lg backdrop-blur-md transition-all group-hover:scale-110 group-hover:bg-white/[0.08]", 
+          deltaColor
+        )}>
+          <DeltaIcon className="h-3.5 w-3.5" />
+          <span className="text-[11px] font-black tracking-tighter">{delta.value}</span>
+        </div>
+      )}
     </div>
   );
 

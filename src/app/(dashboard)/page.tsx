@@ -12,6 +12,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { CHART_COLORS, TOOLTIP_STYLE } from "@/lib/chartColors";
 import { ColumnDef } from "@tanstack/react-table";
 import { cn } from "@/lib/utils";
+import NoSSR from "@/components/shared/NoSSR";
 
 // Mock Data
 const revenueData = [
@@ -150,47 +151,49 @@ export default function DashboardPage() {
             </div>
             
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={revenueData}>
-                  <defs>
-                    <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
-                  <XAxis 
-                    dataKey="name" 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: '#64748b', fontSize: 12 }} 
-                    dy={10} 
-                  />
-                  <YAxis 
-                    axisLine={false} 
-                    tickLine={false} 
-                    tick={{ fill: '#64748b', fontSize: 12 }} 
-                    tickFormatter={(value) => `₺${value/1000}k`}
-                  />
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: '#12141c', 
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      borderRadius: '12px',
-                      color: '#fff'
-                    }}
-                    itemStyle={{ color: '#fff' }}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="total" 
-                    stroke="#3b82f6" 
-                    strokeWidth={3}
-                    fillOpacity={1} 
-                    fill="url(#colorTotal)" 
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
+              <NoSSR>
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={revenueData}>
+                    <defs>
+                      <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                    <XAxis 
+                      dataKey="name" 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#64748b', fontSize: 12 }} 
+                      dy={10} 
+                    />
+                    <YAxis 
+                      axisLine={false} 
+                      tickLine={false} 
+                      tick={{ fill: '#64748b', fontSize: 12 }} 
+                      tickFormatter={(value) => `₺${value/1000}k`}
+                    />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#12141c', 
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '12px',
+                        color: '#fff'
+                      }}
+                      itemStyle={{ color: '#fff' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="total" 
+                      stroke="#3b82f6" 
+                      strokeWidth={3}
+                      fillOpacity={1} 
+                      fill="url(#colorTotal)" 
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </NoSSR>
             </div>
           </div>
 

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart as RePieChart, Pie, Cell } from "recharts";
 import { CHART_COLORS, TOOLTIP_STYLE } from "@/lib/chartColors";
 import { cn } from "@/lib/utils";
+import NoSSR from "@/components/shared/NoSSR";
 
 // Mock Data
 const monthlyGrowth = [
@@ -118,24 +119,26 @@ export default function ReportsPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
             <div className="h-[250px] relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <RePieChart>
-                  <Pie
-                    data={treatmentDist}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="value"
-                  >
-                    {treatmentDist.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
-                    ))}
-                  </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: '#12141c', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff' }} />
-                </RePieChart>
-              </ResponsiveContainer>
+              <NoSSR>
+                <ResponsiveContainer width="100%" height="100%">
+                  <RePieChart>
+                    <Pie
+                      data={treatmentDist}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {treatmentDist.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} stroke="none" />
+                      ))}
+                    </Pie>
+                    <Tooltip contentStyle={{ backgroundColor: '#12141c', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#fff' }} />
+                  </RePieChart>
+                </ResponsiveContainer>
+              </NoSSR>
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Toplam</p>
                 <p className="text-xl font-bold text-white">842</p>

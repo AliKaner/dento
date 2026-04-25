@@ -247,9 +247,9 @@ export default function Sidebar() {
             <p className="text-sm font-semibold text-white truncate leading-none">Dr. Tansu Kaya</p>
             <p className="text-[10px] text-brand-400/70 font-medium mt-1 uppercase tracking-wider">Klinik Sahibi</p>
           </div>
-          <button className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-200 transition-colors">
+          <Link href="/settings" className="p-1.5 rounded-lg hover:bg-white/5 text-slate-500 hover:text-slate-200 transition-colors">
             <Settings className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       </div>
     </aside>

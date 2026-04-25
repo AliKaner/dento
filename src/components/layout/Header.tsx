@@ -53,13 +53,17 @@ export default function Header() {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/10" />
-            <DropdownMenuItem className="focus:bg-white/5 focus:text-white cursor-pointer">
-              <User className="mr-2 h-4 w-4" />
-              <span>Profil</span>
+            <DropdownMenuItem className="focus:bg-white/5 focus:text-white cursor-pointer p-0">
+              <Link href="/settings" className="flex items-center w-full px-2 py-1.5">
+                <User className="mr-2 h-4 w-4 text-slate-500" />
+                <span>Profil Ayarları</span>
+              </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Çıkış Yap</span>
+            <DropdownMenuItem className="text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer p-0">
+              <Link href="/login" className="flex items-center w-full px-2 py-1.5">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Çıkış Yap</span>
+              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
