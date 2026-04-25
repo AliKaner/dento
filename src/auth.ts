@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+const { handlers, auth: internalAuth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
@@ -60,3 +60,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
 });
+
+export const auth: typeof internalAuth = (async (...args: any[]) => {
+  if (process.env.NEXT_PUBLIC_SKIP_AUTH === "true") {
+    return {
+      user: {
+        id: "mock-id",
+        name: "Mock Admin (SKIP_AUTH)",
+        email: "admin@dentaflow.com",
+        role: "OWNER",
+      },
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    } as any;
+  }
+  return (internalAuth as any)(...args);
+}) as any;
+
+export { handlers, signIn, signOut };
