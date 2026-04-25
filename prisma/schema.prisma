@@ -1,0 +1,270 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  DOCTOR
+  ASSISTANT
+  RECEPTIONIST
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum AppointmentType {
+  CHECKUP
+  TREATMENT
+  XRAY
+  CLEANING
+  SURGERY
+  OTHER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  PARTIAL
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  TRANSFER
+  INSURANCE
+}
+
+enum DocumentType {
+  XRAY
+  PHOTO
+  LAB
+  CONSENT
+  OTHER
+}
+
+enum StockMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+model Clinic {
+  id          String   @id @default(cuid())
+  name        String
+  phone       String?
+  address     String?
+  taxId       String?
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+
+  users        User[]
+  patients     Patient[]
+  appointments Appointment[]
+  invoices     Invoice[]
+  inventory    InventoryItem[]
+  suppliers    Supplier[]
+  auditLogs    AuditLog[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(RECEPTIONIST)
+  clinicId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clinic       Clinic        @relation(fields: [clinicId], references: [id])
+  appointments Appointment[] @relation("DoctorAppointments")
+  examRecords  ExamRecord[]  @relation("DoctorExamRecords")
+  documents    Document[]    @relation("UploadedDocuments")
+  stockMovements StockMovement[]
+  auditLogs    AuditLog[]
+}
+
+model Patient {
+  id              String   @id @default(cuid())
+  clinicId        String
+  firstName       String
+  lastName        String
+  phone           String
+  email           String?
+  birthDate       DateTime?
+  gender          Gender?
+  nationalId      String?
+  address         String?
+  bloodType       String?
+  allergies       String[]
+  notes           String?
+  insuranceCompany String?
+  insuranceNo     String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  clinic       Clinic        @relation(fields: [clinicId], references: [id])
+  appointments Appointment[]
+  examRecords  ExamRecord[]
+  invoices     Invoice[]
+  documents    Document[]
+}
+
+model Appointment {
+  id          String            @id @default(cuid())
+  clinicId    String
+  patientId   String
+  doctorId    String
+  date        DateTime
+  durationMin Int               @default(30)
+  status      AppointmentStatus @default(SCHEDULED)
+  type        AppointmentType   @default(CHECKUP)
+  notes       String?
+  reminderSent Boolean          @default(false)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  clinic      Clinic       @relation(fields: [clinicId], references: [id])
+  patient     Patient      @relation(fields: [patientId], references: [id])
+  doctor      User         @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  examRecords ExamRecord[]
+}
+
+model ExamRecord {
+  id             String   @id @default(cuid())
+  patientId      String
+  doctorId       String
+  appointmentId  String?
+  chiefComplaint String?
+  clinicalNotes  String?
+  toothChart     Json?
+  treatmentPlan  Json?
+  prescriptions  Json?
+  photos         String[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  patient     Patient      @relation(fields: [patientId], references: [id])
+  doctor      User         @relation("DoctorExamRecords", fields: [doctorId], references: [id])
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  clinicId      String
+  patientId     String
+  invoiceNo     String        @unique
+  status        InvoiceStatus @default(DRAFT)
+  items         Json
+  subtotal      Float
+  taxRate       Float         @default(0)
+  taxAmount     Float         @default(0)
+  discount      Float         @default(0)
+  total         Float
+  paidAmount    Float         @default(0)
+  dueDate       DateTime?
+  paymentMethod PaymentMethod?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  clinic  Clinic  @relation(fields: [clinicId], references: [id])
+  patient Patient @relation(fields: [patientId], references: [id])
+}
+
+model InventoryItem {
+  id           String    @id @default(cuid())
+  clinicId     String
+  name         String
+  category     String
+  unit         String
+  currentStock Float
+  minStock     Float
+  unitCost     Float     @default(0)
+  supplierId   String?
+  expiryDate   DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  clinic    Clinic          @relation(fields: [clinicId], references: [id])
+  supplier  Supplier?       @relation(fields: [supplierId], references: [id])
+  movements StockMovement[]
+}
+
+model Supplier {
+  id       String  @id @default(cuid())
+  clinicId String
+  name     String
+  phone    String?
+  email    String?
+  address  String?
+  notes    String?
+
+  clinic    Clinic          @relation(fields: [clinicId], references: [id])
+  inventory InventoryItem[]
+}
+
+model StockMovement {
+  id        String            @id @default(cuid())
+  itemId    String
+  type      StockMovementType
+  quantity  Float
+  note      String?
+  userId    String
+  createdAt DateTime          @default(now())
+
+  item InventoryItem @relation(fields: [itemId], references: [id])
+  user User          @relation(fields: [userId], references: [id])
+}
+
+model Document {
+  id           String       @id @default(cuid())
+  patientId    String
+  type         DocumentType
+  fileName     String
+  fileUrl      String
+  fileSize     Int
+  mimeType     String
+  uploadedById String
+  createdAt    DateTime     @default(now())
+
+  patient    Patient @relation(fields: [patientId], references: [id])
+  uploadedBy User    @relation("UploadedDocuments", fields: [uploadedById], references: [id])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  clinicId  String
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  oldData   Json?
+  newData   Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  clinic Clinic @relation(fields: [clinicId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+}
