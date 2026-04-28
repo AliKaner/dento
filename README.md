@@ -2,8 +2,6 @@
 
 DentaFlow, modern diş poliklinikleri için tasarlanmış, hız ve kullanıcı deneyimi odaklı kapsamlı bir yönetim platformudur. Randevu takibinden finansal raporlamaya, diş şemasından hasta mobil uygulamasına kadar tüm ihtiyaçları tek bir çatı altında toplar.
 
-![DentaFlow Dashboard Preview](public/dashboard-preview.png) *(Örnek görsel)*
-
 ## 🚀 Teknolojiler
 
 Bu proje, en güncel web teknolojileri ve mimarileri kullanılarak inşa edilmiştir:
